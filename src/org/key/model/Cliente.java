@@ -1,5 +1,6 @@
 package org.key.model;
 
+//POJO: Nombre, atributos, constructores, getters y setters
 public class Cliente {
 
     /*
