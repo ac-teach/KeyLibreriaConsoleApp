@@ -57,18 +57,20 @@ public class ClienteConsoleView {
         System.out.println("NOMBRE: " + cliente.getNombre());
         System.out.println("APELLIDO: " + cliente.getApellido());
         System.out.println("CORREO E: "+ cliente.getCorreoElectronico());
+        System.out.println("---\n");
     }
     
     //mostrar la lista de CLIENTES -- lista de objeto List<T>, ArrayList<Cliente>
     public void mostrarListaClientes(List<Cliente> clientes){
         System.out.println("--- LISTA DE CLIENTES ---");
         //tabla usando la propiedad %-[tamaño de columa]s
-        System.out.printf("%-10s %-10s %-10s %-10s", "CUI","NOMBRE","APELLIDO","CORREO");
+        System.out.printf("%-15s %-10s %-10s %-10s\n", "CUI","NOMBRE","APELLIDO","CORREO");
         
         for (Cliente cliente : clientes) {
-            System.out.printf("%-10s %-10s %-10s %-10s",
+            System.out.printf("%-10s %-10s %-10s %-10s\n",
                     cliente.getCui(), cliente.getNombre(), cliente.getApellido(), cliente.getCorreoElectronico());
         }
+        System.out.println(" --- fin de clientes ---\n");
     }
     
     //para mostrar mensaje personalizado

@@ -11,9 +11,9 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class ClienteDAOImpl implements ClienteDAO{
+public class ClienteDAOImpl implements ClienteDAO {
 
-     @Override
+    @Override
     public List<Cliente> listarTodos() {
         //crear lista
         List<Cliente> clientes = new ArrayList<>();//null
@@ -22,9 +22,7 @@ public class ClienteDAOImpl implements ClienteDAO{
         //maperar el resultado de la consulta a objeto y lo agregamos a la lista
         //try with resources / intentar con recursos --> cierra el recurso al completar el intento
         //recurso: Conexion, al final se cierra
-        try (Connection conexion = Conexion.getInstancia().conectar();
-                CallableStatement consultaCall = conexion.prepareCall(consulta);
-                ResultSet tablaResultado = consultaCall.executeQuery();) {
+        try (Connection conexion = Conexion.getInstancia().conectar(); CallableStatement consultaCall = conexion.prepareCall(consulta); ResultSet tablaResultado = consultaCall.executeQuery();) {
             //ciclo para rellenar mi lista
             //verificar cada filta del result set
             //va a guarda cada celda dentro de cada atributo de mi objeto
@@ -36,24 +34,43 @@ public class ClienteDAOImpl implements ClienteDAO{
                         tablaResultado.getString("correo_electronico")
                 ));
             }
-         } catch (SQLException e) {
-             System.err.print("Error al listar Clientes: " + e.getMessage());
-         }
-        
+        } catch (SQLException e) {
+            System.err.print("Error al listar Clientes: " + e.getMessage());
+        }
+
         //retornamos un alista
         return clientes;
     }
-    
+
     @Override
     public boolean crear(Cliente cliente) {
         return false;
     }
 
-   
-
     @Override
     public Cliente buscarPorId(long cui) {
-        return null;
+        //objeto
+        Cliente cliente = new Cliente();
+
+        //consulta
+        String consultaSQL = "{call sp_buscarcliente(?)}";
+        //mapeamos el ResultSet al Objeto(Cliente) segun sus atributos y la fila devulta
+        try (Connection conexion = Conexion.getInstancia().conectar(); CallableStatement consultaCall = conexion.prepareCall(consultaSQL);) {
+            consultaCall.setLong(1, cui);
+            ResultSet tablaResultado = consultaCall.executeQuery();
+            if (tablaResultado.next()) {
+                cliente.setCui(tablaResultado.getLong("cui"));
+                cliente.setNombre(tablaResultado.getString("nombre_cliente"));
+                cliente.setApellido(tablaResultado.getString("apellido_cliente"));
+                cliente.setCorreoElectronico(tablaResultado.getString("correo_electronico"));
+            } else {
+                return null;
+            }
+        } catch (SQLException e) {
+            System.err.print("Error al buscar Cliente: " + e.getMessage());
+        }
+        //retornamos el objeto
+        return cliente;
     }
 
     @Override
@@ -65,5 +82,5 @@ public class ClienteDAOImpl implements ClienteDAO{
     public boolean eliminar(long cui) {
         return false;
     }
-    
+
 }
